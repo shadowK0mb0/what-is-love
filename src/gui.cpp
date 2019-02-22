@@ -20,6 +20,13 @@ const char *autoNames[autoCount] = {
   "delayed back"
 };
 
+//saves the auton number to the sd card
+void setAuton(int autonNumber){
+  file *fp;
+  fp = fopen("/usd/auton.txt","w+");
+  fputs("autonNumber", fp);
+  fclose(fp);
+}
 
 // ---------------------------------------
 // ---------GUI HELPER METHODS------------
@@ -99,6 +106,7 @@ static lv_res_t screen_btn_click_action(lv_obj_t * btn)
 static lv_res_t auton_btn_click_action(lv_obj_t * btn)
 {
   uint8_t id = lv_obj_get_free_num(btn);
+  setAuton((int)id);
   char mytext[64];
 
   sprintf(mytext, "Auton %s is selected\n", autoNames[id]);

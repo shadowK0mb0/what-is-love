@@ -20,7 +20,6 @@ void setLift(int sp){
   setLiftAsync(sp);
   int sv = lift1.get_position();
   while(sv != sp) delay(20);
-  //hi
 }
 
 /**************************************************/
