@@ -15,14 +15,16 @@
 #include "gui.hpp"
 
 //ports
-#define LEFTFRONT 17
-#define LEFTREAR 16
-#define RIGHTFRONT 15
-#define RIGHTREAR 14
+#define LEFTFRONT 9
+#define LEFTREAR 10
+#define RIGHTFRONT 20
+#define RIGHTREAR 8
 #define LAUNCHER 13
 #define ADJUSTER 18
-#define LIFT 19
-#define INTAKE 20
+#define LIFT 1
+#define INTAKE 2
+#define VISION_PORT 19
+#define GREEN_SIG 3
 
 
 using namespace pros;

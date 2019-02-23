@@ -6,6 +6,8 @@ void reset();
 
 int drivePos();
 
+void getCoords();
+
 bool isDriving();
 
 void driveTask(void* parameter);
