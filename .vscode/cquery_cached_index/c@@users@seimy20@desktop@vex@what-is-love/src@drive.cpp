@@ -15,8 +15,6 @@ Motor left1(LEFTFRONT, MOTOR_GEARSET_18, 0, MOTOR_ENCODER_DEGREES);
 Motor left2(LEFTREAR, MOTOR_GEARSET_18, 0, MOTOR_ENCODER_DEGREES);
 Motor right1(RIGHTFRONT, MOTOR_GEARSET_18, 1, MOTOR_ENCODER_DEGREES);
 Motor right2(RIGHTREAR, MOTOR_GEARSET_18, 1, MOTOR_ENCODER_DEGREES);
-Vision vision_sensor (VISION_PORT, E_VISION_ZERO_CENTER);
-
 
 /**************************************************/
 //basic control
@@ -45,13 +43,6 @@ void reset(){
 
 int drivePos(){
   return (left1.get_position() + right1.get_position())/2;
-}
-
-//vision sensor test
-void getCoords(){
-  vision_object_s_t rtn = vision_sensor.get_by_sig(0, GREEN_SIG);
-  left(rtn.x_middle_coord*-0.05);
-  right(rtn.x_middle_coord*0.05);
 }
 
 /**************************************************/
@@ -100,12 +91,13 @@ void rightSlew(int rightTarget){
 
 /**************************************************/
 //slop correction
-void slop(int sp){
-  /*if(sp < 0){
+//probably get rid of this cause its bad
+/*void slop(int sp){
+  if(sp < 0){
     right(-40);
     delay(100);
-  }*/
-}
+  }
+}*/
 
 /**************************************************/
 //feedback
@@ -147,7 +139,7 @@ bool isDriving(){
 /**************************************************/
 //autonomous functions
 void driveAsync(int sp){
-  slop(sp);
+  //slop(sp);
   reset();
   driveTarget = sp;
   driveMode = true;
@@ -294,7 +286,4 @@ void driveOp(){
   int rJoy = master.get_analog(ANALOG_RIGHT_Y);
   left(lJoy);
   right(rJoy);
-  if(master.get_digital(DIGITAL_UP)) {
-    getCoords();
-  }
 }

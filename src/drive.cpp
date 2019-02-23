@@ -139,7 +139,7 @@ bool isDriving(){
 /**************************************************/
 //autonomous functions
 void driveAsync(int sp){
-  slop(sp);
+  //slop(sp);
   reset();
   driveTarget = sp;
   driveMode = true;

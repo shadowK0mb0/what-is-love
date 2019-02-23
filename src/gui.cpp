@@ -115,7 +115,7 @@ static lv_res_t auton_btn_click_action(lv_obj_t * btn)
 
   sprintf(mytext, "Auton %s is selected\n", autoNames[id]);
   lv_label_set_text(autonLabel, mytext);
-  lv_obj_align(autonL  abel, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, -5);
+  lv_obj_align(autonLabel, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, -5);
   auton = id;
   /* The button is released.
   * Make something here */
