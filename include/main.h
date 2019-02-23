@@ -25,6 +25,7 @@
 #define INTAKE 2
 #define VISION_PORT 19
 #define GREEN_SIG 3
+#define POTENTIOMETER_PORT 'A'
 
 
 using namespace pros;

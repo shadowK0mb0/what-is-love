@@ -2,17 +2,46 @@
 
 static int launcherTarget = 0;
 const int ratchetDistance = 50;
+static bool cataLoad = false;
+static bool cataThrowB = false;
 
 //motors
 Motor launcher1(LAUNCHER, MOTOR_GEARSET_36, 1, MOTOR_ENCODER_DEGREES);
 
 //line sensors
 ADIAnalogIn line('G');
+ADIPotentiometer pot (POTENTIOMETER_PORT);
 
 /**************************************************/
 //basic control
 void launcher(int vel){
   launcher1.move(vel);
+}
+
+bool cataSet(int dist){
+  int error = dist - pot.get_value();
+  double kp = 0.4;
+  double propError = 0;
+  if (abs(error) > 2){
+    error = dist - pot.get_value();
+    propError = error * kp;
+    if (propError < 0){
+      propError = 0;
+    }
+    launcher((int)propError);
+    delay(20);
+  }
+  return(error > 2);
+}
+
+bool cataThrow(){
+  int potVal = pot.get_value();
+  if (potVal > 1600){
+    launcher(100);
+  } else {
+    launcher(0);
+  }
+  return(potVal > 1600);
 }
 
 /**************************************************/
@@ -70,7 +99,28 @@ void launcherTask(void* parameter){
 /**************************************************/
 //operator control
 void launcherOp(){
-  static int vel = 0;
+  if (master.get_digital(DIGITAL_A)){
+    cataLoad = true;
+  }
+  if (master.get_digital(DIGITAL_B)){
+    cataThrowB = true;
+    cataLoad = true;
+  }
+  if (master.get_digital(DIGITAL_X)){
+    launcher(85);
+    cataLoad = false;
+    cataThrowB = false;
+  } else {
+    launcher(0);
+  }
+  if (cataLoad){
+    cataLoad = cataSet(2200);
+  }
+  if (cataThrowB) {
+    cataThrowB = cataThrow();
+    //cataLoad = true;
+  }
+/*  static int vel = 0;
   static int ready = true;
   static bool first = true;
 
@@ -99,5 +149,7 @@ void launcherOp(){
 
   if(!ready)
     vel = 127;
+*/
+
 
 }
