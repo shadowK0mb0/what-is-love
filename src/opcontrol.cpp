@@ -5,7 +5,7 @@ Controller master(CONTROLLER_MASTER);
 void opcontrol() {
 	while (true){
 		driveOp();
-		//intakeOp();
+		intakeOp();
 		//launcherOp();
   //  liftOp();
 

@@ -14,7 +14,7 @@ ADILineSensor line_I('H');
 /**************************************************/
 //basic control
 void intake(int vel){
-  intake1.move_velocity(vel);
+  intake1.move(vel);
 }
 
 /**************************************************/
@@ -83,9 +83,9 @@ void intakeOp(){
   intake(vel);
 
   if(master.get_digital(DIGITAL_R1))
-    vel = 127;
-  else if(master.get_digital(DIGITAL_L1))
-    vel = -60;
+    vel = 100;
+  else if(master.get_digital(DIGITAL_R2))
+    vel = -80;
   else
     vel = 0;
 }

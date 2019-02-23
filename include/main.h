@@ -15,15 +15,15 @@
 #include "gui.hpp"
 
 //ports
-#define LEFTFRONT 9
-#define LEFTREAR 10
-#define RIGHTFRONT 20
-#define RIGHTREAR 8
-#define LAUNCHER 13
+#define LEFTFRONT 3
+#define LEFTREAR 2
+#define RIGHTFRONT 19
+#define RIGHTREAR 1
+#define LAUNCHER 10
 #define ADJUSTER 18
 #define LIFT 1
-#define INTAKE 2
-#define VISION_PORT 19
+#define INTAKE 20
+#define VISION_PORT 6
 #define GREEN_SIG 3
 #define POTENTIOMETER_PORT 'A'
 
