@@ -23,9 +23,15 @@ const char *autoNames[autoCount] = {
 
 //saves the auton number to the sd card
 void setAuton(int autonNumber){
+
   FILE *fp;
   fp = fopen("/usd/auton.txt", "w");
   fprintf(fp, "%d", autonNumber);
+
+  file *fp;
+  fp = fopen("/usd/auton.txt","w+");
+  fputs("autonNumber", fp);
+
   fclose(fp);
 }
 
@@ -107,7 +113,10 @@ static lv_res_t screen_btn_click_action(lv_obj_t * btn)
 static lv_res_t auton_btn_click_action(lv_obj_t * btn)
 {
   uint8_t id = lv_obj_get_free_num(btn);
+
   setAuton(id);
+  setAuton((int)id);
+
   char mytext[64];
 
   sprintf(mytext, "Auton %s is selected\n", autoNames[id]);
