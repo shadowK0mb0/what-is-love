@@ -92,12 +92,12 @@ void rightSlew(int rightTarget){
 /**************************************************/
 //slop correction
 //probably get rid of this cause its bad
-/*void slop(int sp){
+void slop(int sp){
   if(sp < 0){
     right(-40);
     delay(100);
   }
-}*/
+}
 
 /**************************************************/
 //feedback
@@ -139,7 +139,7 @@ bool isDriving(){
 /**************************************************/
 //autonomous functions
 void driveAsync(int sp){
-  //slop(sp);
+  slop(sp);
   reset();
   driveTarget = sp;
   driveMode = true;

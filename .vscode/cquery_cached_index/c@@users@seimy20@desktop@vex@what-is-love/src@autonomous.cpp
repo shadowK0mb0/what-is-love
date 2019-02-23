@@ -311,6 +311,20 @@ void test2() {
   drive(-2.5 TL);
 }
 
+void test3() {
+  //intake ball under the nearest cap
+  intake(100);
+  drive(1.9 TL);
+
+  //back up against wall
+  drive(-2 TL);
+
+  //align with flags
+  drive(.22 TL);
+  intake(0);
+  turn(84);
+}
+
 void autonomous() {
   reset(); // reset the drive encoders
 
@@ -331,7 +345,7 @@ void autonomous() {
       test2();
       break;
     case 3:
-      delayShotBack();
+      test3();
       break;
   }
 
