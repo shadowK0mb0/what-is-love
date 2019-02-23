@@ -7,7 +7,7 @@ void opcontrol() {
 		driveOp();
 		intakeOp();
 		//launcherOp();
-  //  liftOp();
+		//liftOp();
 
 		if(master.get_digital(DIGITAL_LEFT) && !competition::is_connected())
 			autonomous();
