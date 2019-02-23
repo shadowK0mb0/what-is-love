@@ -294,6 +294,23 @@ void skills(){
   reset();
 }
 
+void test() {
+  drive(2 TL);
+  turn(90);
+
+}
+
+void test2() {
+  //intake ball and flip cap
+  intake(-80);
+  driveAsync(2.4 TL);
+  while(drivePos() < 2.2 TL) delay(20);
+  intakeBallAsync();
+
+  //back up against wall
+  drive(-2.5 TL);
+}
+
 void autonomous() {
   reset(); // reset the drive encoders
 
@@ -302,23 +319,16 @@ void autonomous() {
   Task intake_task(intakeTask);
   Task launcher_task(launcherTask);
 
-  if(!competition::is_connected() && bypass.get_value()){
-    auton = -1;
-    drive(-2 TL);
-    turn(-90);
-    turn(-90);
-    drive(-2 TL);
-  }
 
   switch(auton){
     case 0:
       bigBoi();
       break;
     case 1:
-      skills();
+      test();
       break;
     case 2:
-      backSquare();
+      test2();
       break;
     case 3:
       delayShotBack();
