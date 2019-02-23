@@ -28,10 +28,6 @@ void setAuton(int autonNumber){
   fp = fopen("/usd/auton.txt", "w");
   fprintf(fp, "%d", autonNumber);
 
-  file *fp;
-  fp = fopen("/usd/auton.txt","w+");
-  fputs("autonNumber", fp);
-
   fclose(fp);
 }
 
