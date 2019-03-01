@@ -11,6 +11,7 @@
 #include "launcher.hpp"
 //#include "adjuster.hpp"
 #include "lift.hpp"
+#include "flipper.hpp"
 #include "pros/apix.h"
 #include "gui.hpp"
 
@@ -22,6 +23,7 @@
 #define LAUNCHER 10
 #define LIFT 5
 #define INTAKE 20
+#define FLIPPER 8
 #define VISION_PORT 6
 #define GREEN_SIG 3
 #define POTENTIOMETER_PORT 'A'

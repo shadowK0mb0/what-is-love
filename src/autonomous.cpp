@@ -43,7 +43,7 @@ void bigBoi(){
 
   //flip next cap
   intake(-80);
-  driveAsync(1.5 TL);
+  driveAsync(1.3 TL); // down from 1.5
   while(drivePos() < .45 TL) delay(20);
   setSpeed(50);
   while(drivePos() < .9 TL) delay(20);
@@ -51,7 +51,7 @@ void bigBoi(){
   while(isDriving()) delay(20);
   intake(0);
 
-  drive(-.3 TL);
+  drive(-.3 TL); // down from -0.3
 
   //shoot flags in the center
   turn(50);

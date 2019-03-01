@@ -6,7 +6,7 @@ void reset();
 
 int drivePos();
 
-void getCoords();
+void visionAlignment();
 
 bool isDriving();
 

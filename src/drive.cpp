@@ -47,8 +47,16 @@ int drivePos(){
 
 void visionAlignment() {
   vision_object_s_t rtn = vision_sensor.get_by_sig(0, GREEN_SIG);
-  left(rtn.x_middle_coord*1);
-  right(rtn.x_middle_coord*-1);
+  if (rtn.width > 30 && rtn.height > 30){
+    int midCoord = rtn.x_middle_coord;
+    if (mirror) { //blue
+      left((midCoord+10)*0.3);
+      right((midCoord + 10)*-0.3);
+    } else { // red
+      left((midCoord + 10)*0.3);
+      right((midCoord +10)*-0.3);
+    }
+  }
 }
 
 /**************************************************/
@@ -288,16 +296,15 @@ void turnTask(void* parameter){
 void driveOp(){
   setCurrent(2500);
   setBrakeMode(0);
-  int lJoy = master.get_analog(ANALOG_LEFT_Y);
-  int rJoy = master.get_analog(ANALOG_RIGHT_Y);
-  left(lJoy);
-  right(rJoy);
-  if (master.get_digital(DIGITAL_UP)) {
-    left(120);
-    right(120);
-  } else if (master.get_digital(DIGITAL_UP)) {
-    left(-120);
-    right(-120);
+  if (master.get_digital(DIGITAL_LEFT)) {
+    int vel = master.get_analog(ANALOG_RIGHT_Y);
+    left(vel);
+    right(vel);
+  } else {
+    int lJoy = master.get_analog(ANALOG_LEFT_Y);
+    int rJoy = master.get_analog(ANALOG_RIGHT_Y);
+    left(lJoy);
+    right(rJoy);
   }
-  if (master.get_digital(DIGITAL_RIGHT)) visionAlignment();
+  if (master.get_digital(DIGITAL_Y)) visionAlignment();
 }

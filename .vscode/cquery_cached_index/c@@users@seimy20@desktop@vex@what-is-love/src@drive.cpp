@@ -15,7 +15,7 @@ Motor left1(LEFTFRONT, MOTOR_GEARSET_18, 0, MOTOR_ENCODER_DEGREES);
 Motor left2(LEFTREAR, MOTOR_GEARSET_18, 0, MOTOR_ENCODER_DEGREES);
 Motor right1(RIGHTFRONT, MOTOR_GEARSET_18, 1, MOTOR_ENCODER_DEGREES);
 Motor right2(RIGHTREAR, MOTOR_GEARSET_18, 1, MOTOR_ENCODER_DEGREES);
-
+Vision vision_sensor (VISION_PORT, E_VISION_ZERO_CENTER);
 /**************************************************/
 //basic control
 void left(int vel){
@@ -43,6 +43,20 @@ void reset(){
 
 int drivePos(){
   return (left1.get_position() + right1.get_position())/2;
+}
+
+void visionAlignment() {
+  vision_object_s_t rtn = vision_sensor.get_by_sig(0, GREEN_SIG);
+  if (rtn.width > 30 && rtn.height > 30){
+    int midCoord = rtn.x_middle_coord;
+    if (mirror) { //blue
+      left((midCoord+10)*0.3);
+      right((midCoord + 10)*-0.3);
+    } else { // red
+      left((midCoord + 10)*0.3);
+      right((midCoord +10)*-0.3);
+    }
+  }
 }
 
 /**************************************************/
@@ -110,7 +124,7 @@ bool isDriving(){
   int rightPos = right1.get_position();
 
   int curr = (abs(leftPos) + abs(rightPos))/2;
-  int thresh = 3;
+  int thresh = 2;
   int target = turnTarget;
 
   if(driveMode)
@@ -258,7 +272,7 @@ void turnTask(void* parameter){
     else
       sp *= 2.35;
 
-    double kp = .9;
+    double kp = 1;
     double kd = 3.5;
 
     int sv = (right1.get_position() - left1.get_position())/2;
@@ -282,8 +296,15 @@ void turnTask(void* parameter){
 void driveOp(){
   setCurrent(2500);
   setBrakeMode(0);
-  int lJoy = master.get_analog(ANALOG_LEFT_Y);
-  int rJoy = master.get_analog(ANALOG_RIGHT_Y);
-  left(lJoy);
-  right(rJoy);
+  if (master.get_digital(DIGITAL_LEFT)) {
+    int vel = master.get_analog(ANALOG_RIGHT_Y);
+    left(vel);
+    right(vel);
+  } else {
+    int lJoy = master.get_analog(ANALOG_LEFT_Y);
+    int rJoy = master.get_analog(ANALOG_RIGHT_Y);
+    left(lJoy);
+    right(rJoy);
+  }
+  if (master.get_digital(DIGITAL_Y)) visionAlignment();
 }
