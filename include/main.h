@@ -20,8 +20,7 @@
 #define RIGHTFRONT 19
 #define RIGHTREAR 1
 #define LAUNCHER 10
-#define ADJUSTER 18
-#define LIFT 1
+#define LIFT 5
 #define INTAKE 20
 #define VISION_PORT 6
 #define GREEN_SIG 3

@@ -15,7 +15,7 @@ static lv_obj_t * autonLabel;
 const int autoCount = 5;
 const char *autoNames[autoCount] = {
   "nothing",
-  "test",
+  "platform",
   "test2",
   "back",
   "delayed back"

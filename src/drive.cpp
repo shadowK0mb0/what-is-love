@@ -15,7 +15,7 @@ Motor left1(LEFTFRONT, MOTOR_GEARSET_18, 0, MOTOR_ENCODER_DEGREES);
 Motor left2(LEFTREAR, MOTOR_GEARSET_18, 0, MOTOR_ENCODER_DEGREES);
 Motor right1(RIGHTFRONT, MOTOR_GEARSET_18, 1, MOTOR_ENCODER_DEGREES);
 Motor right2(RIGHTREAR, MOTOR_GEARSET_18, 1, MOTOR_ENCODER_DEGREES);
-
+Vision vision_sensor (VISION_PORT, E_VISION_ZERO_CENTER);
 /**************************************************/
 //basic control
 void left(int vel){
@@ -43,6 +43,12 @@ void reset(){
 
 int drivePos(){
   return (left1.get_position() + right1.get_position())/2;
+}
+
+void visionAlignment() {
+  vision_object_s_t rtn = vision_sensor.get_by_sig(0, GREEN_SIG);
+  left(rtn.x_middle_coord*1);
+  right(rtn.x_middle_coord*-1);
 }
 
 /**************************************************/
@@ -110,7 +116,7 @@ bool isDriving(){
   int rightPos = right1.get_position();
 
   int curr = (abs(leftPos) + abs(rightPos))/2;
-  int thresh = 3;
+  int thresh = 2;
   int target = turnTarget;
 
   if(driveMode)
@@ -258,7 +264,7 @@ void turnTask(void* parameter){
     else
       sp *= 2.35;
 
-    double kp = .9;
+    double kp = 1;
     double kd = 3.5;
 
     int sv = (right1.get_position() - left1.get_position())/2;
@@ -286,4 +292,12 @@ void driveOp(){
   int rJoy = master.get_analog(ANALOG_RIGHT_Y);
   left(lJoy);
   right(rJoy);
+  if (master.get_digital(DIGITAL_UP)) {
+    left(120);
+    right(120);
+  } else if (master.get_digital(DIGITAL_UP)) {
+    left(-120);
+    right(-120);
+  }
+  if (master.get_digital(DIGITAL_RIGHT)) visionAlignment();
 }

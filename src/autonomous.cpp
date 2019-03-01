@@ -1,7 +1,7 @@
 #include "main.h"
 
 //definition of a tile in encoder ticks
-#define TL *545
+#define TL *635
 
 ADIDigitalIn bypass('A');
 
@@ -16,19 +16,19 @@ void bigBoi(){
 
   //align with flags
   drive(.22 TL);
-  turn(84);
+  turn(103);
 
   //launch the balls
-  shoot();
-  ratchetAsync();
-  intake(127);
-  while(!isLoaded()) delay(20);
-  shoot();
-  ratchetAsync();
+
+  while(!isFired()) {
+    cataThrow();
+    delay(20);
+  }
+  launcher(0);
 
   //toggle low flag
   turn(13);
-  loadBallAsync();
+  intakeBallAsync();
   driveAsync(2.3 TL);
   while(drivePos() < 1.7 TL) delay(20);
   setSpeed(40);
@@ -38,7 +38,7 @@ void bigBoi(){
   drive(-1.1 TL);
 
   //line up with the wall
-  turn(-90);
+  turn(-103);
   drive(-.5 TL);
 
   //flip next cap
@@ -294,9 +294,16 @@ void skills(){
   reset();
 }
 
-void test() {
+void platformAuton() {
+  intakeBall();
   drive(2 TL);
-  turn(90);
+  drive(-0.4 TL);
+  intakeStop();
+  turn(103);
+  setSpeed(40);
+  while(isDriving()) delay(20);
+  drive(0.4 TL);
+
 
 }
 
@@ -322,7 +329,23 @@ void test3() {
   //align with flags
   drive(.22 TL);
   intake(0);
-  turn(84);
+  turn(100);
+  drive(.42 TL);
+  visionAlignment();
+  while (!isFired()) {
+    cataThrow();
+  }
+  drive(1.8 TL);
+  drive(-1.8 TL);
+  turn(-100);
+  intake(-100);
+  drive(2 TL);
+  drive(-0.4 TL);
+  turn(40);
+  drive(-0.4 TL);
+  visionAlignment();
+
+
 }
 
 void autonomous() {
@@ -339,7 +362,7 @@ void autonomous() {
       bigBoi();
       break;
     case 1:
-      test();
+      platformAuton();
       break;
     case 2:
       test2();

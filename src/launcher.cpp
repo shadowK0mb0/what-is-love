@@ -2,15 +2,19 @@
 
 static int launcherTarget = 0;
 const int ratchetDistance = 50;
-static bool cataLoad = false;
-static bool cataThrowB = false;
+bool cataLoad = false;
+bool cataThrowing = false;
+int lastPotVal = 0;
+int cataStuckCount = 0;
 
 //motors
 Motor launcher1(LAUNCHER, MOTOR_GEARSET_36, 1, MOTOR_ENCODER_DEGREES);
 
 //line sensors
 ADIAnalogIn line('G');
-ADIPotentiometer pot (POTENTIOMETER_PORT);
+
+//potentiometer
+ADIPotentiometer pot('A');
 
 /**************************************************/
 //basic control
@@ -18,39 +22,10 @@ void launcher(int vel){
   launcher1.move(vel);
 }
 
-bool cataSet(int dist){
-  int error = dist - pot.get_value();
-  double kp = 0.4;
-  double propError = 0;
-  if (abs(error) > 2){
-    error = dist - pot.get_value();
-    propError = error * kp;
-    if (propError < 0){
-      propError = 0;
-    }
-    launcher((int)propError);
-    delay(20);
-  }
-  return(error > 2);
-}
-
-bool cataThrow(){
-  int potVal = pot.get_value();
-  if (potVal > 1600){
-    launcher(100);
-  } else {
-    launcher(0);
-  }
-  return(potVal > 1600);
-}
-
 /**************************************************/
 //feedback
 bool isFired(){
-  if(line.get_value() < 2000)
-    return true;
-  else
-    return false;
+  return(pot.get_value() < 1600);
 }
 
 /**************************************************/
@@ -97,30 +72,69 @@ void launcherTask(void* parameter){
 }
 
 /**************************************************/
-//operator control
-void launcherOp(){
-  if (master.get_digital(DIGITAL_A)){
-    cataLoad = true;
+//PID
+bool cataSet(int dist){
+  int potVal = pot.get_value();
+  int error = dist - potVal;
+  if (potVal > 1950) {
+    if (launcher1.is_over_temp() == 1 || launcher1.is_over_current() == 1) {
+      return false;
+    }
+    if (lastPotVal - potVal < 1) {
+      cataStuckCount++;
+    }
   }
-  if (master.get_digital(DIGITAL_B)){
-    cataThrowB = true;
-    cataLoad = true;
+  if (cataStuckCount > 5) {
+    cataStuckCount = 0;
+    return false;
   }
-  if (master.get_digital(DIGITAL_X)){
-    launcher(85);
-    cataLoad = false;
-    cataThrowB = false;
-  } else {
+  double kp = 0.8;
+  double propError = 0;
+
+  if(abs(error) > 2){
+    error = dist - potVal;
+    propError = error * kp;
+    if (propError < 0){
+        propError = 0;
+    }
+    launcher((int)propError);
+    delay(20);
+  }
+
+  int lastPotVal = potVal;
+  return(error > 2);
+}
+
+
+
+bool cataThrow(){
+  int potVal = pot.get_value();
+  if (launcher1.is_over_temp() == 1 || launcher1.is_over_current() == 1) {
+    return false;
+  }
+  if (potVal > 1600){
+    launcher(120);
+  }else{
     launcher(0);
   }
-  if (cataLoad){
-    cataLoad = cataSet(2200);
-  }
-  if (cataThrowB) {
-    cataThrowB = cataThrow();
-    //cataLoad = true;
-  }
-/*  static int vel = 0;
+  lastPotVal = potVal;
+  return(potVal > 1600);
+}
+
+bool isCatapultLoaded() {
+  return (2400 - pot.get_value()) > 10;
+}
+
+
+
+
+
+
+/**************************************************/
+//operator control
+void launcherOp(){
+  launcher1.set_current_limit(2700); // SUSSSS
+  /*static int vel = 0;
   static int ready = true;
   static bool first = true;
 
@@ -148,8 +162,28 @@ void launcherOp(){
     ready = true;
 
   if(!ready)
-    vel = 127;
-*/
+    vel = 127;*/
 
 
+
+  if (master.get_digital(DIGITAL_X)){
+    cataLoad = true;
+  }
+  if (master.get_digital(DIGITAL_A)){
+    cataThrowing = true;
+    cataLoad = true;
+  }
+  if (master.get_digital(DIGITAL_B)){
+    launcher(120);
+    cataLoad = false;
+    cataThrowing = false;
+  }else{
+    launcher(0);
+  }
+  if (cataLoad && !cataThrowing){
+    cataLoad = cataSet(2400);
+  }
+  if (cataThrowing){
+    cataThrowing = cataThrow();
+  }
 }
