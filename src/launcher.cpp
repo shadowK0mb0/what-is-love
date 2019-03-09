@@ -25,7 +25,7 @@ void launcher(int vel){
 /**************************************************/
 //feedback
 bool isFired(){
-  return(pot.get_value() < 1600);
+  return (pot.get_value() < 1600);
 }
 
 /**************************************************/
@@ -36,6 +36,16 @@ void shootAsync(){
 
 void ratchetAsync(){
   launcherTarget = 2;
+}
+
+void cataLoadAsync() {
+  cataLoad = true;
+  cataThrowing = false;
+}
+
+void cataThrowAsync() {
+  cataLoad = true;
+  cataThrowing = true;
 }
 
 void shoot(){
@@ -58,7 +68,7 @@ void launcherTask(void* parameter){
   while(1){
     delay(20);
 
-    switch(launcherTarget){
+    /*switch(launcherTarget){
       case 1:
         shoot();
         break;
@@ -67,7 +77,14 @@ void launcherTask(void* parameter){
         break;
     }
 
-    launcherTarget = 0;
+    launcherTarget = 0;*/
+    if (cataLoad && !cataThrowing){
+      cataLoad = cataSet(2400);
+    } else if (cataThrowing){
+      cataThrowing = cataThrow();
+    } else {
+      launcher(0);
+    }
   }
 }
 

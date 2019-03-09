@@ -15,7 +15,11 @@ Motor left1(LEFTFRONT, MOTOR_GEARSET_18, 0, MOTOR_ENCODER_DEGREES);
 Motor left2(LEFTREAR, MOTOR_GEARSET_18, 0, MOTOR_ENCODER_DEGREES);
 Motor right1(RIGHTFRONT, MOTOR_GEARSET_18, 1, MOTOR_ENCODER_DEGREES);
 Motor right2(RIGHTREAR, MOTOR_GEARSET_18, 1, MOTOR_ENCODER_DEGREES);
+
+
+// Sensors
 Vision vision_sensor (VISION_PORT, E_VISION_ZERO_CENTER);
+ADILineSensor lineTracker ('F');
 /**************************************************/
 //basic control
 void left(int vel){
@@ -41,20 +45,24 @@ void reset(){
   right(0);
 }
 
+bool trackerTriggered() {
+  return lineTracker.get_value() < 2870;
+}
+
 int drivePos(){
   return (left1.get_position() + right1.get_position())/2;
 }
 
 void visionAlignment() {
   vision_object_s_t rtn = vision_sensor.get_by_sig(0, GREEN_SIG);
-  if (rtn.width > 30 && rtn.height > 30){
+  if (rtn.width > 5 && rtn.height > 5){
     int midCoord = rtn.x_middle_coord;
-    if (mirror) { //blue
-      left((midCoord+10)*0.3);
-      right((midCoord + 10)*-0.3);
-    } else { // red
-      left((midCoord + 10)*0.3);
-      right((midCoord +10)*-0.3);
+    if (mirror) { //hit red flags
+      left((midCoord - 7));
+      right((midCoord - 7)*-1.3);
+    } else { // hit blue flags
+      left((midCoord + 7));
+      right((midCoord + 7)*-1.3);
     }
   }
 }
@@ -306,5 +314,7 @@ void driveOp(){
     left(lJoy);
     right(rJoy);
   }
-  if (master.get_digital(DIGITAL_Y)) visionAlignment();
+  if (master.get_digital(DIGITAL_Y)) {
+    visionAlignment();
+  }
 }

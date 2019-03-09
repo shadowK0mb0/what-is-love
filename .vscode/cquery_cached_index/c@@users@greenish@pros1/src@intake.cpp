@@ -14,7 +14,7 @@ ADILineSensor line_I('H');
 /**************************************************/
 //basic control
 void intake(int vel){
-  intake1.move_velocity(vel);
+  intake1.move(vel);
 }
 
 /**************************************************/
@@ -44,8 +44,10 @@ void loadBallAsync(){
 }
 
 void intakeBall(){
-  intake(127);
-  while(!hasBall()) delay(20);
+  intake(110);
+}
+
+void intakeStop() {
   intake(0);
 }
 
@@ -83,9 +85,9 @@ void intakeOp(){
   intake(vel);
 
   if(master.get_digital(DIGITAL_R1))
-    vel = 127;
-  else if(master.get_digital(DIGITAL_L1))
-    vel = -60;
+    vel = 110;
+  else if(master.get_digital(DIGITAL_R2))
+    vel = -80;
   else
     vel = 0;
 }

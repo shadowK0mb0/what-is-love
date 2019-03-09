@@ -16,6 +16,10 @@ Motor left2(LEFTREAR, MOTOR_GEARSET_18, 0, MOTOR_ENCODER_DEGREES);
 Motor right1(RIGHTFRONT, MOTOR_GEARSET_18, 1, MOTOR_ENCODER_DEGREES);
 Motor right2(RIGHTREAR, MOTOR_GEARSET_18, 1, MOTOR_ENCODER_DEGREES);
 
+
+// Sensors
+Vision vision_sensor (VISION_PORT, E_VISION_ZERO_CENTER);
+ADILineSensor lineTracker ('F');
 /**************************************************/
 //basic control
 void left(int vel){
@@ -41,8 +45,26 @@ void reset(){
   right(0);
 }
 
+bool trackerTriggered() {
+  return lineTracker.get_value() < 2870;
+}
+
 int drivePos(){
   return (left1.get_position() + right1.get_position())/2;
+}
+
+void visionAlignment() {
+  vision_object_s_t rtn = vision_sensor.get_by_sig(0, GREEN_SIG);
+  if (rtn.width > 5 && rtn.height > 5){
+    int midCoord = rtn.x_middle_coord;
+    if (mirror) { //hit red flags
+      left((midCoord - 7));
+      right((midCoord - 7)*-1.3);
+    } else { // hit blue flags
+      left((midCoord + 7));
+      right((midCoord + 7)*-1.3);
+    }
+  }
 }
 
 /**************************************************/
@@ -91,6 +113,7 @@ void rightSlew(int rightTarget){
 
 /**************************************************/
 //slop correction
+//probably get rid of this cause its bad
 void slop(int sp){
   if(sp < 0){
     right(-40);
@@ -109,7 +132,7 @@ bool isDriving(){
   int rightPos = right1.get_position();
 
   int curr = (abs(leftPos) + abs(rightPos))/2;
-  int thresh = 3;
+  int thresh = 2;
   int target = turnTarget;
 
   if(driveMode)
@@ -257,7 +280,7 @@ void turnTask(void* parameter){
     else
       sp *= 2.35;
 
-    double kp = .9;
+    double kp = 1;
     double kd = 3.5;
 
     int sv = (right1.get_position() - left1.get_position())/2;
@@ -281,8 +304,17 @@ void turnTask(void* parameter){
 void driveOp(){
   setCurrent(2500);
   setBrakeMode(0);
-  int lJoy = master.get_analog(ANALOG_LEFT_Y);
-  int rJoy = master.get_analog(ANALOG_RIGHT_Y);
-  left(lJoy);
-  right(rJoy);
+  if (master.get_digital(DIGITAL_LEFT)) {
+    int vel = master.get_analog(ANALOG_RIGHT_Y);
+    left(vel);
+    right(vel);
+  } else {
+    int lJoy = master.get_analog(ANALOG_LEFT_Y);
+    int rJoy = master.get_analog(ANALOG_RIGHT_Y);
+    left(lJoy);
+    right(rJoy);
+  }
+  if (master.get_digital(DIGITAL_Y)) {
+    visionAlignment();
+  }
 }

@@ -6,6 +6,10 @@ void reset();
 
 int drivePos();
 
+bool trackerTriggered();
+
+void visionAlignment();
+
 bool isDriving();
 
 void driveTask(void* parameter);

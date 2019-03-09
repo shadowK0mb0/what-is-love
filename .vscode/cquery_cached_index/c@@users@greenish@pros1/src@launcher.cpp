@@ -2,12 +2,19 @@
 
 static int launcherTarget = 0;
 const int ratchetDistance = 50;
+bool cataLoad = false;
+bool cataThrowing = false;
+int lastPotVal = 0;
+int cataStuckCount = 0;
 
 //motors
 Motor launcher1(LAUNCHER, MOTOR_GEARSET_36, 1, MOTOR_ENCODER_DEGREES);
 
 //line sensors
 ADIAnalogIn line('G');
+
+//potentiometer
+ADIPotentiometer pot('A');
 
 /**************************************************/
 //basic control
@@ -18,10 +25,7 @@ void launcher(int vel){
 /**************************************************/
 //feedback
 bool isFired(){
-  if(line.get_value() < 2000)
-    return true;
-  else
-    return false;
+  return (pot.get_value() < 1600);
 }
 
 /**************************************************/
@@ -32,6 +36,16 @@ void shootAsync(){
 
 void ratchetAsync(){
   launcherTarget = 2;
+}
+
+void cataLoadAsync() {
+  cataLoad = true;
+  cataThrowing = false;
+}
+
+void cataThrowAsync() {
+  cataLoad = true;
+  cataThrowing = true;
 }
 
 void shoot(){
@@ -54,7 +68,7 @@ void launcherTask(void* parameter){
   while(1){
     delay(20);
 
-    switch(launcherTarget){
+    /*switch(launcherTarget){
       case 1:
         shoot();
         break;
@@ -63,14 +77,81 @@ void launcherTask(void* parameter){
         break;
     }
 
-    launcherTarget = 0;
+    launcherTarget = 0;*/
+    if (cataLoad && !cataThrowing){
+      cataLoad = cataSet(2400);
+    } else if (cataThrowing){
+      cataThrowing = cataThrow();
+    } else {
+      launcher(0);
+    }
   }
 }
 
 /**************************************************/
+//PID
+bool cataSet(int dist){
+  int potVal = pot.get_value();
+  int error = dist - potVal;
+  if (potVal > 1950) {
+    if (launcher1.is_over_temp() == 1 || launcher1.is_over_current() == 1) {
+      return false;
+    }
+    if (lastPotVal - potVal < 1) {
+      cataStuckCount++;
+    }
+  }
+  if (cataStuckCount > 5) {
+    cataStuckCount = 0;
+    return false;
+  }
+  double kp = 0.8;
+  double propError = 0;
+
+  if(abs(error) > 2){
+    error = dist - potVal;
+    propError = error * kp;
+    if (propError < 0){
+        propError = 0;
+    }
+    launcher((int)propError);
+    delay(20);
+  }
+
+  int lastPotVal = potVal;
+  return(error > 2);
+}
+
+
+
+bool cataThrow(){
+  int potVal = pot.get_value();
+  if (launcher1.is_over_temp() == 1 || launcher1.is_over_current() == 1) {
+    return false;
+  }
+  if (potVal > 1600){
+    launcher(120);
+  }else{
+    launcher(0);
+  }
+  lastPotVal = potVal;
+  return(potVal > 1600);
+}
+
+bool isCatapultLoaded() {
+  return (2400 - pot.get_value()) > 10;
+}
+
+
+
+
+
+
+/**************************************************/
 //operator control
 void launcherOp(){
-  static int vel = 0;
+  launcher1.set_current_limit(2700); // SUSSSS
+  /*static int vel = 0;
   static int ready = true;
   static bool first = true;
 
@@ -98,6 +179,28 @@ void launcherOp(){
     ready = true;
 
   if(!ready)
-    vel = 127;
+    vel = 127;*/
 
+
+
+  if (master.get_digital(DIGITAL_X)){
+    cataLoad = true;
+  }
+  if (master.get_digital(DIGITAL_A)){
+    cataThrowing = true;
+    cataLoad = true;
+  }
+  if (master.get_digital(DIGITAL_B)){
+    launcher(120);
+    cataLoad = false;
+    cataThrowing = false;
+  }else{
+    launcher(0);
+  }
+  if (cataLoad && !cataThrowing){
+    cataLoad = cataSet(2400);
+  }
+  if (cataThrowing){
+    cataThrowing = cataThrow();
+  }
 }

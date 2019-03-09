@@ -1,7 +1,7 @@
 {
     "py/object": "pros.conductor.project.Project",
     "py/state": {
-        "project_name": "butt cheek XD rawr",
+        "project_name": "fputc",
         "target": "v5",
         "templates": {
             "kernel": {

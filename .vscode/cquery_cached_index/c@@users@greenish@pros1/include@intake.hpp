@@ -9,6 +9,7 @@ bool isLoaded();
 void intakeBallAsync();
 void loadBallAsync();
 void intakeBall();
+void intakeStop();
 void loadBall();
 
 void intakeTask(void* parameter);
