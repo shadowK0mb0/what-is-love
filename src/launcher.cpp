@@ -150,7 +150,7 @@ bool isCatapultLoaded() {
 /**************************************************/
 //operator control
 void launcherOp(){
-  launcher1.set_current_limit(2700); // SUSSSS
+  launcher1.set_current_limit(3000); // SUSSSS
   /*static int vel = 0;
   static int ready = true;
   static bool first = true;
