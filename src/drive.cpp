@@ -116,8 +116,8 @@ void rightSlew(int rightTarget){
 //probably get rid of this cause its bad
 void slop(int sp){
   if(sp < 0){
-    right(-40);
-    delay(100);
+    right(-70);
+    delay(200);
   }
 }
 
