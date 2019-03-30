@@ -1,6 +1,11 @@
 #include "main.h"
 
 
+
+const int setHeights[3] = {0, 128, 350};
+int heightIndex = 0;
+
+
 Motor lift1(LIFT, MOTOR_GEARSET_18, 1, MOTOR_ENCODER_DEGREES);
 
 /**************************************************/
@@ -14,7 +19,7 @@ void lift(int vel){
 
 void setLiftAsync(int sp){
   sp *= 5; // gear ratio compensation
-  lift1.move_absolute(sp, 200);
+  lift1.move_absolute(sp, 100);
 }
 
 void setLift(int sp){
@@ -23,26 +28,47 @@ void setLift(int sp){
   while(sv != sp) delay(20);
 }
 
+int heightIndexGet() {
+  return heightIndex;
+}
+
+
+
 /**************************************************/
 //operator control
 void liftOp(){
-  static int vel;
 
-  /*if(master.get_digital(DIGITAL_))
-    setLiftAsync(179);
-  else
-    lift(vel);*/
 
-  if(master.get_digital(DIGITAL_L1)){
+  /*if(master.get_digital(DIGITAL_DOWN)){
     //if(lift1.get_position() < 500)
-    vel = 127;
+    vel = 127; // go up
     //else
     //vel = 60;
-  }else if(master.get_digital(DIGITAL_L2) && lift1.get_raw_position(NULL) > 0){
-    vel = -127;
+  }else if(master.get_digital(DIGITAL_RIGHT) && lift1.get_raw_position(NULL) > 0){
+    vel = -127; // down
   }
   else{
     vel = 0;
+  }*/
+  if (master.get_digital_new_press(DIGITAL_DOWN) && heightIndex < 2)
+    heightIndex++;
+    setLiftAsync(setHeights[heightIndex]);
+
+  if (master.get_digital_new_press(DIGITAL_RIGHT) && heightIndex > 0)
+    heightIndex--;
+    setLiftAsync(setHeights[heightIndex]);
+
+
+
+
+  if (heightIndex == 0) {
+    if (lift1.get_raw_position(NULL) > 2)
+      lift(-127); // down
+    else
+      lift(0);
   }
-  lift(vel);
+
+
+
+
 }

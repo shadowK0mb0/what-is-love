@@ -116,8 +116,8 @@ void rightSlew(int rightTarget){
 //probably get rid of this cause its bad
 void slop(int sp){
   if(sp < 0){
-    right(-70);
-    delay(200);
+    right(-40);
+    delay(100);
   }
 }
 
@@ -304,16 +304,10 @@ void turnTask(void* parameter){
 void driveOp(){
   setCurrent(2500);
   setBrakeMode(0);
-  if (master.get_digital(DIGITAL_LEFT)) {
-    int vel = master.get_analog(ANALOG_RIGHT_Y);
-    left(vel);
-    right(vel);
-  } else {
-    int lJoy = master.get_analog(ANALOG_LEFT_Y);
-    int rJoy = master.get_analog(ANALOG_RIGHT_Y);
-    left(lJoy);
-    right(rJoy);
-  }
+  int lJoy = master.get_analog(ANALOG_LEFT_Y);
+  int rJoy = master.get_analog(ANALOG_RIGHT_Y);
+  left(lJoy);
+  right(rJoy);
   if (master.get_digital(DIGITAL_Y)) {
     visionAlignment();
   }

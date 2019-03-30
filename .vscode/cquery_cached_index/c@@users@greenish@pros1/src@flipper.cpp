@@ -48,9 +48,11 @@ void flipperTask(void* parameter){
 
 void flipperOp(){
   static int vel;
-  if(master.get_digital(DIGITAL_L1)){ // checks that the flipper is not dangerously far down
+  // up
+  if(master.get_digital(DIGITAL_LEFT)){ // checks that the flipper is not dangerously far down
     vel = 110;
-  }else if(master.get_digital(DIGITAL_L2)){ // checks that the flipper is not dangerously far up
+  // down
+  }else if(master.get_digital(DIGITAL_UP)){ // checks that the flipper is not dangerously far up
     vel = -80;
   }else{
     vel = 0;

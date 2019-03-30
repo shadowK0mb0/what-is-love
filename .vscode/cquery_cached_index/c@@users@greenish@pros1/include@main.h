@@ -18,12 +18,12 @@
 //ports
 #define LEFTFRONT 3
 #define LEFTREAR 2
-#define RIGHTFRONT 19
+#define RIGHTFRONT 4
 #define RIGHTREAR 1
 #define LAUNCHER 10
 #define LIFT 5
-#define INTAKE 20
-#define FLIPPER 8
+#define INTAKE 8
+#define FLIPPER 6
 #define VISION_PORT 7
 #define GREEN_SIG 3
 #define POTENTIOMETER_PORT 'A'

@@ -79,13 +79,18 @@ void bigBoi(){
   drive(-1.1 TL);
 
   //line up with the wall
+  flipperDownAsync();
   turn(-109);
   drive(-.5 TL);
   intake(-80);
   //flip next cap
-  drive(1.05 TL);
+  driveAsync(1.05 TL);
+  while(drivePos() < 0.8 TL) delay(20);
+  flipperUpAsync();
+  while(isDriving()) delay(20);
   //shoot flags in the center
   intakeStop();
+
   turn(50);
   while(!isFired()) {
     cataThrow();

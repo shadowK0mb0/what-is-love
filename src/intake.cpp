@@ -1,6 +1,8 @@
 #include "main.h"
 
 static int intakeTarget = 0;
+static bool intakeIn = false;
+static bool intakeOut = false;
 
 //motors
 Motor intake1(INTAKE, MOTOR_GEARSET_18, 0, MOTOR_ENCODER_DEGREES);
@@ -80,14 +82,27 @@ void intakeTask(void* parameter){
 //operator control
 void intakeOp(){
   static int vel;
-
+  intake1.set_current_limit(2500);
 
   intake(vel);
-
-  if(master.get_digital(DIGITAL_R1))
-    vel = 110;
-  else if(master.get_digital(DIGITAL_R2))
-    vel = -80;
-  else
-    vel = 0;
+  if (!intake1.is_over_temp()) {
+    if(master.get_digital(DIGITAL_R1) && !master.get_digital(DIGITAL_R2)) {
+      intakeIn = true;
+      intakeOut = false;
+      vel = 110; // intake
+    } else if(master.get_digital(DIGITAL_R2) && !master.get_digital(DIGITAL_R1)) {
+      intakeOut = true;
+      intakeIn = false;
+      vel = -120;
+    } else if (master.get_digital(DIGITAL_R1) && master.get_digital(DIGITAL_R2)) {
+      if (intakeOut)
+        vel = -40;
+      else if (intakeIn)
+        vel = 40;
+    } else {
+      intakeOut = false;
+      intakeIn = false;
+      vel = 0;
+    }
+  }
 }

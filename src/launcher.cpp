@@ -150,7 +150,7 @@ bool isCatapultLoaded() {
 /**************************************************/
 //operator control
 void launcherOp(){
-  launcher1.set_current_limit(3000); // SUSSSS
+  //launcher1.set_current_limit(3000); // SUSSSS
   /*static int vel = 0;
   static int ready = true;
   static bool first = true;
@@ -183,10 +183,10 @@ void launcherOp(){
 
 
 
-  if (master.get_digital(DIGITAL_X)){
+  if (master.get_digital(DIGITAL_L2) && !master.get_digital(DIGITAL_L1)){
     cataLoad = true;
   }
-  if (master.get_digital(DIGITAL_A)){
+  if (master.get_digital(DIGITAL_L1) && !master.get_digital(DIGITAL_L2)){
     cataThrowing = true;
     cataLoad = true;
   }
