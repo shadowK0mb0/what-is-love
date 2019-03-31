@@ -7,6 +7,8 @@ bool isFired();
 
 void shootAsync();
 void ratchetAsync();
+void cataLoadAsync();
+void cataThrowAsync();
 void shoot();
 void ratchet();
 

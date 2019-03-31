@@ -4,4 +4,12 @@
 void flip();
 void flipperOp();
 
+bool flipperTooHigh();
+
+void flipperUpAsync();
+
+void flipperDownAsync();
+
+void flipperTask(void* parameter);
+
 #endif

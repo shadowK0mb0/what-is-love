@@ -8,22 +8,13 @@ void opcontrol() {
 		driveOp();
 		intakeOp();
 		launcherOp();
+		liftOp();
+		flipperOp();
 
-		if (master.get_digital(DIGITAL_UP)) {
-			liftMode = false;
-		} else if (master.get_digital(DIGITAL_DOWN)) {
-			liftMode = true;
-		}
-
-		if (liftMode){
-			liftOp();
-		} else {
-			flipperOp();
-		}
-
-		if (master.get_digital(DIGITAL_RIGHT) && !competition::is_connected()){
+		if (master.get_digital(DIGITAL_UP) && !competition::is_connected()){
 			autonomous();
 		}
+		master.print(0, 0, "%d", heightIndexGet());
 		delay(10);
 	}
 }

@@ -11,9 +11,9 @@ void opcontrol() {
 		liftOp();
 		flipperOp();
 
-		/*if (master.get_digital(DIGITAL_RIGHT) && !competition::is_connected()){
+		if (master.get_digital(DIGITAL_UP) && !competition::is_connected()){
 			autonomous();
-		}*/
+		}
 		master.print(0, 0, "%d", heightIndexGet());
 		delay(10);
 	}

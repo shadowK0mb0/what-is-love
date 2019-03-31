@@ -25,7 +25,7 @@ void launcher(int vel){
 /**************************************************/
 //feedback
 bool isFired(){
-  return (pot.get_value() < 1600);
+  return (pot.get_value() < 1250);
 }
 
 /**************************************************/
@@ -79,7 +79,7 @@ void launcherTask(void* parameter){
 
     launcherTarget = 0;*/
     if (cataLoad && !cataThrowing){
-      cataLoad = cataSet(2400);
+      cataLoad = cataSet(1800);
     } else if (cataThrowing){
       cataThrowing = cataThrow();
     } else {
@@ -93,8 +93,8 @@ void launcherTask(void* parameter){
 bool cataSet(int dist){
   int potVal = pot.get_value();
   int error = dist - potVal;
-  if (potVal > 1950) {
-    if (launcher1.is_over_temp() == 1 || launcher1.is_over_current() == 1) {
+  if (potVal > 1300) {
+    if (launcher1.is_over_temp() == 1) {
       return false;
     }
     if (lastPotVal - potVal < 1) {
@@ -129,17 +129,17 @@ bool cataThrow(){
   if (launcher1.is_over_temp() == 1 || launcher1.is_over_current() == 1) {
     return false;
   }
-  if (potVal > 1600){
+  if (potVal > 1250){
     launcher(120);
   }else{
     launcher(0);
   }
   lastPotVal = potVal;
-  return(potVal > 1600);
+  return(potVal > 1250);
 }
 
 bool isCatapultLoaded() {
-  return (2400 - pot.get_value()) > 10;
+  return (1800 - pot.get_value()) > 10;
 }
 
 

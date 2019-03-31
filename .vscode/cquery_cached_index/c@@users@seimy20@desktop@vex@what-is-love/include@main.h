@@ -11,20 +11,22 @@
 #include "launcher.hpp"
 //#include "adjuster.hpp"
 #include "lift.hpp"
+#include "flipper.hpp"
 #include "pros/apix.h"
 #include "gui.hpp"
 
 //ports
-#define LEFTFRONT 9
-#define LEFTREAR 10
-#define RIGHTFRONT 20
-#define RIGHTREAR 8
-#define LAUNCHER 13
-#define ADJUSTER 18
-#define LIFT 1
-#define INTAKE 2
-#define VISION_PORT 19
+#define LEFTFRONT 3
+#define LEFTREAR 2
+#define RIGHTFRONT 4
+#define RIGHTREAR 1
+#define LAUNCHER 10
+#define LIFT 5
+#define INTAKE 8
+#define FLIPPER 6
+#define VISION_PORT 7
 #define GREEN_SIG 3
+#define POTENTIOMETER_PORT 'A'
 
 
 using namespace pros;

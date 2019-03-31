@@ -13,13 +13,14 @@ static lv_obj_t * mirrorLabel;
 // --Screen 2 set up--
 // can have up to 6 different autons (max is dependent on how many
 // alignments are in alignArray)
-const int autoCount = 5;
+const int autoCount = 6;
 const char *autoNames[autoCount] = {
   "big boi",
   "platform",
   "flagAndPlat",
   "get back",
-  "test 3"
+  "test 3",
+  "back auton"
 };
 
 //saves the auton number to the sd card

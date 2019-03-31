@@ -300,6 +300,76 @@ void delayShotBack(){
   while(isDriving()) delay(20);
 }
 
+void backAuton(){
+  //intake ball under the nearest cap
+  intake(70);
+  drive(1.8 TL);
+  /*while(drivePos() < 1 TL) delay(20);
+  intakeBall();
+  while(isDriving()) delay(20);
+  intakeStop();*/
+
+  //back up against wall
+  intake(45);
+  drive(-0.4 TL);
+  intake(0);
+  turn(115);
+  drive(0.4 TL);
+
+  //align with flags
+  drive(-0.18 TL);
+  turn(-51);
+  drive(-0.45 TL);
+
+  //launch the balls
+  while(!isFired()) {
+    cataThrow();
+  }
+  cataLoadAsync();
+
+  delay(500);
+  intake(-35);
+  delay(200);
+  intake(127);
+  delay(1600);
+  intake(0);
+
+  drive(-0.9 TL);
+  while(!isFired()) {
+    cataThrow();
+  }
+  cataLoadAsync();
+  /*
+  shoot();
+  ratchetAsync();
+  intake(127);
+  while(!isLoaded()) delay(20);
+  shoot();
+  ratchetAsync();
+
+  //toggle low flag
+  turn(13);
+  loadBallAsync();
+  driveAsync(2.3 TL);
+  while(drivePos() < 1.7 TL) delay(20);
+  setSpeed(40);
+  while(isDriving()) delay(20);
+
+  //align for park
+  drive(-3 TL);
+  turn(-90);
+
+  //alliance park
+  intake(127);
+  driveAsync(2.9 TL);
+  while(drivePos() < 2.4 TL) delay(20);
+  setSpeed(20);
+  while(isDriving()) delay(20);
+  driveAsync(.4 TL);
+  setSpeed(40);
+  while(isDriving()) delay(20);*/
+}
+
 
 /*********************************************************/
 void skills(){
@@ -496,6 +566,8 @@ void autonomous() {
       break;
     case 4:
       skills2();
+    case 5:
+      backAuton();
   }
 
   drive_task.remove();

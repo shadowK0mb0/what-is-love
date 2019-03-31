@@ -8,17 +8,19 @@ static lv_obj_t * scr; // home screen
 static lv_obj_t * autonSelectionScreen;
 static lv_obj_t * actionScreen;
 static lv_obj_t * autonLabel;
+static lv_obj_t * mirrorLabel;
 
 // --Screen 2 set up--
 // can have up to 6 different autons (max is dependent on how many
 // alignments are in alignArray)
-const int autoCount = 5;
+const int autoCount = 6;
 const char *autoNames[autoCount] = {
-  "nothing",
   "big boi",
-  "skills",
-  "back",
-  "delayed back"
+  "platform",
+  "flagAndPlat",
+  "get back",
+  "test 3",
+  "back auton"
 };
 
 //saves the auton number to the sd card
@@ -27,10 +29,6 @@ void setAuton(int autonNumber){
   FILE *fp;
   fp = fopen("/usd/auton.txt", "w");
   fprintf(fp, "%d", autonNumber);
-
-  file *fp;
-  fp = fopen("/usd/auton.txt","w+");
-  fputs("autonNumber", fp);
 
   fclose(fp);
 }
@@ -113,8 +111,6 @@ static lv_res_t screen_btn_click_action(lv_obj_t * btn)
 static lv_res_t auton_btn_click_action(lv_obj_t * btn)
 {
   uint8_t id = lv_obj_get_free_num(btn);
-
-  setAuton(id);
   setAuton((int)id);
 
   char mytext[64];
@@ -144,6 +140,23 @@ static lv_res_t action_btn_click_action(lv_obj_t * btn)
 
   return LV_RES_OK; /*Return OK if the button is not deleted*/
 }
+
+static lv_res_t mirror_btn_click_action(lv_obj_t * btn)
+{
+  if (mirror) {
+    mirror = false;
+    lv_label_set_text(mirrorLabel, "Mirror: false");
+  } else {
+    mirror = true;
+    lv_label_set_text(mirrorLabel, "Mirror: true");
+  }
+
+  /* The button is released.
+  * Make something here */
+
+  return LV_RES_OK; /*Return OK if the button is not deleted*/
+}
+
 
 // ---------------------------------------
 // ----------MAIN GUI SET UP--------------
@@ -188,9 +201,9 @@ void gui(void) {
  label = lv_label_create(btn2, NULL);
  lv_label_set_text(label, "Actions");
 
- static lv_obj_t *btn3 = drawButton(style1, LV_ALIGN_IN_RIGHT_MID, screen_btn_click_action, 3, scr, 0);
- label = lv_label_create(btn3, NULL);
- lv_label_set_text(label, "Choice 3");
+ static lv_obj_t *btn3 = drawButton(style1, LV_ALIGN_IN_RIGHT_MID, mirror_btn_click_action, 0, scr, 0);
+ mirrorLabel = lv_label_create(btn3, NULL);
+ lv_label_set_text(mirrorLabel, "Mirror: false");
 
 // SCREEN 2 --- AUTON SELECTION SCREEN ---
 
