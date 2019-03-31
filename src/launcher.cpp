@@ -79,7 +79,7 @@ void launcherTask(void* parameter){
 
     launcherTarget = 0;*/
     if (cataLoad && !cataThrowing){
-      cataLoad = cataSet(1800);
+      cataLoad = cataSet(2200);
     } else if (cataThrowing){
       cataThrowing = cataThrow();
     } else {
@@ -105,7 +105,7 @@ bool cataSet(int dist){
     cataStuckCount = 0;
     return false;
   }
-  double kp = 0.8;
+  double kp = 1;
   double propError = 0;
 
   if(abs(error) > 2){
@@ -126,7 +126,7 @@ bool cataSet(int dist){
 
 bool cataThrow(){
   int potVal = pot.get_value();
-  if (launcher1.is_over_temp() == 1 || launcher1.is_over_current() == 1) {
+  if (launcher1.is_over_temp() == 1) {
     return false;
   }
   if (potVal > 1250){
@@ -139,7 +139,7 @@ bool cataThrow(){
 }
 
 bool isCatapultLoaded() {
-  return (1800 - pot.get_value()) > 10;
+  return (2200 - pot.get_value()) > 10;
 }
 
 
@@ -198,7 +198,7 @@ void launcherOp(){
     launcher(0);
   }
   if (cataLoad && !cataThrowing){
-    cataLoad = cataSet(2400);
+    cataLoad = cataSet(2200);
   }
   if (cataThrowing){
     cataThrowing = cataThrow();

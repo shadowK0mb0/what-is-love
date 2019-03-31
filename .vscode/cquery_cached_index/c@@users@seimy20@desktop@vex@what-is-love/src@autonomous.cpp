@@ -201,9 +201,15 @@ void flagAndPlat(){
   drive(-1);
 }
 
-void skills2() {
-  bigBoi();
-  getBack();
+void adi(){
+  //intake ball under the nearest cap
+  uint32_t startTime = millis();
+  uint32_t currTime = millis();
+  while(currTime - startTime < 15000) {
+    delay(100);
+    currTime = millis();
+  }
+  drive(-1);
 }
 
 
@@ -565,9 +571,11 @@ void autonomous() {
       getBack();
       break;
     case 4:
-      skills2();
+      adi();
+      break;
     case 5:
       backAuton();
+      break;
   }
 
   drive_task.remove();
