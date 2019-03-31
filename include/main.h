@@ -5,6 +5,7 @@
 
 #define PROS_USE_LITERALS
 
+#include "okapi/api.hpp"
 #include "api.h"
 #include "drive.hpp"
 #include "intake.hpp"
