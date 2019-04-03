@@ -96,13 +96,15 @@ void intakeOp(){
       vel = -120;
     } else if (master.get_digital(DIGITAL_R1) && master.get_digital(DIGITAL_R2)) {
       if (intakeOut)
-        vel = -40;
+        vel = -70;
       else if (intakeIn)
-        vel = 40;
+        vel = 50;
     } else {
       intakeOut = false;
       intakeIn = false;
       vel = 0;
     }
+  } else if (intake1.is_over_temp() && (master.get_digital(DIGITAL_R1) || master.get_digital(DIGITAL_R2))) {
+    master.rumble("-");
   }
 }

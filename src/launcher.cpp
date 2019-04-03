@@ -6,6 +6,8 @@ bool cataLoad = false;
 bool cataThrowing = false;
 int lastPotVal = 0;
 int cataStuckCount = 0;
+int cataLauncherDist = 1500;
+int cataLoadDist = 2180;
 
 //motors
 Motor launcher1(LAUNCHER, MOTOR_GEARSET_36, 1, MOTOR_ENCODER_DEGREES);
@@ -25,7 +27,7 @@ void launcher(int vel){
 /**************************************************/
 //feedback
 bool isFired(){
-  return (pot.get_value() < 1250);
+  return (pot.get_value() < cataLauncherDist);
 }
 
 /**************************************************/
@@ -79,7 +81,7 @@ void launcherTask(void* parameter){
 
     launcherTarget = 0;*/
     if (cataLoad && !cataThrowing){
-      cataLoad = cataSet(2200);
+      cataLoad = cataSet(cataLoadDist);
     } else if (cataThrowing){
       cataThrowing = cataThrow();
     } else {
@@ -93,19 +95,20 @@ void launcherTask(void* parameter){
 bool cataSet(int dist){
   int potVal = pot.get_value();
   int error = dist - potVal;
-  if (potVal > 1300) {
-    if (launcher1.is_over_temp() == 1) {
+  if (potVal > cataLauncherDist+50) {
+    if (launcher1.is_over_temp() == 1 || launcher1.is_over_current()) {
+      master.rumble("..");
       return false;
     }
     if (lastPotVal - potVal < 1) {
       cataStuckCount++;
     }
   }
-  if (cataStuckCount > 5) {
+  if (cataStuckCount > 20) {
     cataStuckCount = 0;
     return false;
   }
-  double kp = 1;
+  double kp = 1.8;
   double propError = 0;
 
   if(abs(error) > 2){
@@ -127,19 +130,20 @@ bool cataSet(int dist){
 bool cataThrow(){
   int potVal = pot.get_value();
   if (launcher1.is_over_temp() == 1) {
+    master.rumble("..");
     return false;
   }
-  if (potVal > 1250){
+  if (potVal > cataLauncherDist){
     launcher(120);
   }else{
     launcher(0);
   }
   lastPotVal = potVal;
-  return(potVal > 1250);
+  return(potVal > cataLauncherDist);
 }
 
 bool isCatapultLoaded() {
-  return (2200 - pot.get_value()) > 10;
+  return (cataLoadDist - pot.get_value()) > 10;
 }
 
 
@@ -150,7 +154,7 @@ bool isCatapultLoaded() {
 /**************************************************/
 //operator control
 void launcherOp(){
-  //launcher1.set_current_limit(3000); // SUSSSS
+  launcher1.set_current_limit(3000); // SUSSSS
   /*static int vel = 0;
   static int ready = true;
   static bool first = true;
@@ -198,7 +202,7 @@ void launcherOp(){
     launcher(0);
   }
   if (cataLoad && !cataThrowing){
-    cataLoad = cataSet(2200);
+    cataLoad = cataSet(cataLoadDist);
   }
   if (cataThrowing){
     cataThrowing = cataThrow();

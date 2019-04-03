@@ -5,7 +5,7 @@
 
 #define PROS_USE_LITERALS
 
-#include "okapi/api.hpp"
+//#include "okapi/api.hpp"
 #include "api.h"
 #include "drive.hpp"
 #include "intake.hpp"
@@ -27,6 +27,7 @@
 #define FLIPPER 6
 #define VISION_PORT 7
 #define GREEN_SIG 3
+#define BLUE_SIG 1
 #define POTENTIOMETER_PORT 'A'
 
 

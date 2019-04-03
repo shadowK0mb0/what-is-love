@@ -54,16 +54,20 @@ int drivePos(){
 }
 
 void visionAlignment() {
-  vision_object_s_t rtn = vision_sensor.get_by_sig(0, GREEN_SIG);
-  if (rtn.width > 5 && rtn.height > 5){
+  vision_object_s_t rtn = vision_sensor.get_by_sig(0, BLUE_SIG);
+  if (rtn.width > 15 && rtn.height > 15){
     int midCoord = rtn.x_middle_coord;
-    if (mirror) { //hit red flags
+    // Green sig stuff
+    /*if (mirror) { //hit red flags
       left((midCoord - 7));
       right((midCoord - 7)*-1.3);
     } else { // hit blue flags
       left((midCoord + 7));
       right((midCoord + 7)*-1.3);
-    }
+    }*/
+    // blue sig stuff
+    left((midCoord - 16)*1.2);
+    right((midCoord - 16)*-1.2);
   }
 }
 
