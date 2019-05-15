@@ -3,11 +3,13 @@
 static int intakeTarget = 0;
 static bool intakeIn = false;
 static bool intakeOut = false;
+static bool indexing = false;
 
 //motors
 Motor intake1(INTAKE, MOTOR_GEARSET_18, 0, MOTOR_ENCODER_DEGREES);
 
 //line sensors
+//ADILineSensor line('F');
 ADILineSensor line_L('F');
 ADILineSensor line_R('E');
 ADILineSensor line_I('H');
@@ -22,7 +24,7 @@ void intake(int vel){
 /**************************************************/
 //feedback
 bool hasBall(){
-  if(line_L.get_value() < 2000 || line_R.get_value() < 2000)
+  if(line_L.get_value() < 2000)
     return true;
   else
     return false;
@@ -81,27 +83,39 @@ void intakeTask(void* parameter){
 /**************************************************/
 //operator control
 void intakeOp(){
-  static int vel;
+  static int vel =0;
   intake1.set_current_limit(2500);
 
+  /*if (indexing){
+    if (!hasBall()){
+      intake(vel);
+    }
+  } else {
+    intake(vel);
+  }*/
   intake(vel);
+
   if (!intake1.is_over_temp()) {
     if(master.get_digital(DIGITAL_R1) && !master.get_digital(DIGITAL_R2)) {
       intakeIn = true;
       intakeOut = false;
+      indexing = false;
       vel = 110; // intake
     } else if(master.get_digital(DIGITAL_R2) && !master.get_digital(DIGITAL_R1)) {
       intakeOut = true;
       intakeIn = false;
-      vel = -120;
+      indexing = false;
+      vel = -110;
     } else if (master.get_digital(DIGITAL_R1) && master.get_digital(DIGITAL_R2)) {
+      indexing = true;
       if (intakeOut)
         vel = -70;
       else if (intakeIn)
-        vel = 50;
+        vel = 70;
     } else {
       intakeOut = false;
       intakeIn = false;
+      indexing = false;
       vel = 0;
     }
   } else if (intake1.is_over_temp() && (master.get_digital(DIGITAL_R1) || master.get_digital(DIGITAL_R2))) {

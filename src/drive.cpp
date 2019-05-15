@@ -7,6 +7,8 @@ static int driveTarget = 0;
 static int turnTarget = 0;
 static int maxSpeed = MAX;
 static int slant = 0;
+static int konami = 0;
+static bool konamiAct = false;
 
 
 
@@ -55,7 +57,7 @@ int drivePos(){
 
 void visionAlignment() {
   vision_object_s_t rtn = vision_sensor.get_by_sig(0, BLUE_SIG);
-  if (rtn.width > 15 && rtn.height > 15){
+  if (rtn.width > 8 && rtn.height > 12){
     int midCoord = rtn.x_middle_coord;
     // Green sig stuff
     /*if (mirror) { //hit red flags
@@ -66,8 +68,16 @@ void visionAlignment() {
       right((midCoord + 7)*-1.3);
     }*/
     // blue sig stuff
-    left((midCoord - 16)*1.2);
-    right((midCoord - 16)*-1.2);
+    int error = (midCoord-7);
+    int speed = error*1.2;
+    /*if (error > 2 && !isDriving()) {
+      error += 80;
+    }*/
+    left(speed);
+    right(-1*speed);
+    if (error < 2) {
+      master.rumble(".-");
+    }
   }
 }
 
@@ -165,7 +175,7 @@ bool isDriving(){
 /**************************************************/
 //autonomous functions
 void driveAsync(int sp){
-  //slop(sp);
+  slop(sp);
   reset();
   driveTarget = sp;
   driveMode = true;
@@ -174,7 +184,9 @@ void driveAsync(int sp){
 void turnAsync(int sp){
   if(mirror)
     sp = -sp; // inverted turn for blue auton
+
   reset();
+
   turnTarget = sp;
   driveMode = false;
 }
@@ -282,10 +294,10 @@ void turnTask(void* parameter){
     if(sp > 0)
       sp *= 2.35;
     else
-      sp *= 2.35;
+      sp *= 2.2;
 
-    double kp = 1;
-    double kd = 3.5;
+    double kp = 1.6;
+    double kd = 3.7;
 
     int sv = (right1.get_position() - left1.get_position())/2;
     int error = sp-sv;
@@ -312,7 +324,49 @@ void driveOp(){
   int rJoy = master.get_analog(ANALOG_RIGHT_Y);
   left(lJoy);
   right(rJoy);
-  if (master.get_digital(DIGITAL_Y)) {
+  if (master.get_digital(DIGITAL_A)) {
     visionAlignment();
+  }
+  if (master.get_digital(DIGITAL_UP)) {
+    if (konami == 0 || konami == 1){
+      konami ++;
+    } else if (konami != 2) {
+      konami = 0;
+    }
+  } else if (master.get_digital(DIGITAL_DOWN)){
+    if (konami == 2 || konami == 3){
+      konami ++;
+    } else if (konami != 4) {
+      konami = 0;
+    }
+  } else if (master.get_digital(DIGITAL_LEFT)){
+      if (konami == 4 || konami == 6){
+        konami ++;
+      } else if (konami != 5 && konami != 7) {
+        konami = 0;
+      }
+  } else if (master.get_digital(DIGITAL_RIGHT)){
+    if (konami == 5 || konami == 7){
+      konami ++;
+    } else if (konami != 6 && konami != 8) {
+      konami = 0;
+    }
+  } else if (master.get_digital(DIGITAL_B)){
+    if (konami == 8){
+      konami ++;
+    } else if (konami != 9) {
+      konami = 0;
+    }
+  } else if (master.get_digital(DIGITAL_A)){
+    if (konami == 9){
+      konamiAct = true;
+    } else {
+      konami = 0;
+    }
+  }
+
+  if (konamiAct){
+    left(127);
+    right(-127);
   }
 }

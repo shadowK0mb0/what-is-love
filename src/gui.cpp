@@ -18,8 +18,8 @@ const char *autoNames[autoCount] = {
   "big boi",
   "platform",
   "flagAndPlat",
-  "get back",
-  "test 3",
+  "scrap boi 2",
+  "scrap boi",
   "back auton"
 };
 

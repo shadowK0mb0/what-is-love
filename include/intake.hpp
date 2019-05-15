@@ -11,6 +11,7 @@ void loadBallAsync();
 void intakeBall();
 void intakeStop();
 void loadBall();
+void intakeBallAsync();
 
 void intakeTask(void* parameter);
 

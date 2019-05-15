@@ -7,7 +7,7 @@ bool cataThrowing = false;
 int lastPotVal = 0;
 int cataStuckCount = 0;
 int cataLauncherDist = 1500;
-int cataLoadDist = 2180;
+int cataLoadDist = 2150;
 
 //motors
 Motor launcher1(LAUNCHER, MOTOR_GEARSET_36, 1, MOTOR_ENCODER_DEGREES);
@@ -100,7 +100,7 @@ bool cataSet(int dist){
       master.rumble("..");
       return false;
     }
-    if (lastPotVal - potVal < 1) {
+    if (lastPotVal - potVal < 1 && potVal > cataLoadDist + 100) {
       cataStuckCount++;
     }
   }
@@ -108,7 +108,7 @@ bool cataSet(int dist){
     cataStuckCount = 0;
     return false;
   }
-  double kp = 1.8;
+  double kp = 3;
   double propError = 0;
 
   if(abs(error) > 2){

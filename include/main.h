@@ -24,9 +24,9 @@
 #define LAUNCHER 10
 #define LIFT 5
 #define INTAKE 8
-#define FLIPPER 6
+#define FLIPPER 21
 #define VISION_PORT 7
-#define GREEN_SIG 3
+#define GREEN_SIG 4
 #define BLUE_SIG 1
 #define POTENTIOMETER_PORT 'A'
 

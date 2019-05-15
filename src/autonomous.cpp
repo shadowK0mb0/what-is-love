@@ -46,11 +46,17 @@ void getBack() {
 }
 
 /*********************************************************/
-void bigBoi(){
-  //intake ball under the nearest cap
 
-  drive(2 TL);
+
+void bigBoiDelay(){
+  int startTime = millis();
+  //intake ball under the nearest cap
   intakeBall();
+  driveAsync(1.96 TL);
+  while(drivePos() < 1.77 TL) delay(20);
+  setSpeed(40);
+  while(isDriving()) delay(20);
+
   delay(100);
 
   //back up against wall
@@ -58,7 +64,7 @@ void bigBoi(){
 
   //align with flags
   drive(.22 TL);
-  turn(108);
+  turn(105);
 
   intakeStop();
   drive(0.3 TL);
@@ -68,7 +74,7 @@ void bigBoi(){
   }
   cataLoadAsync();
   //toggle low flag
-  turn(14);
+  turn(13);
   intakeBall();
   driveAsync(2.25 TL);
   while(drivePos() < 1.7 TL) delay(20);
@@ -78,18 +84,112 @@ void bigBoi(){
   //backup to align with next cap
   drive(-1.1 TL);
 
+
+
   //line up with the wall
-  flipperDownAsync();
-  turn(-109);
+
+  turn(-103);
   drive(-.5 TL);
-  intake(-80);
+  intake(-120);
   //flip next cap
-  driveAsync(1.05 TL);
-  while(drivePos() < 0.8 TL) delay(20);
-  flipperUpAsync();
-  while(isDriving()) delay(20);
+  //flipperDownAsync();
+  drive(1.2 TL);
+
   //shoot flags in the center
+
+
+  turn(57);
+  while(millis() - startTime < 14500) delay(20);
+  while(!isFired()) {
+    cataThrow();
+  }
+  cataLoadAsync();
+
+}
+
+void bigScrapBoi() {
+  int startTime = millis();
+  //intake ball under the nearest cap
+  intakeBall();
+  drive(1.95 TL);
+  while(drivePos() < 1.77 TL) delay(20);
+  setSpeed(40);
+  while(isDriving()) delay(20);
+  drive(-2.1 TL);
   intakeStop();
+
+  //align with flags
+  drive(.22 TL);
+  turn(105);
+
+  intakeStop();
+  drive(0.3 TL);
+  //launch the balls
+  while(!isFired()) {
+    cataThrow();
+  }
+  cataLoadAsync();
+  //toggle low flag
+  turn(13);
+
+  driveAsync(1.4 TL);
+  while(drivePos() < 1.2 TL) delay(20);
+  flip(-100);
+  while(isDriving()) delay(20);
+  flip(100);
+  //backup to align with next cap
+  drive(-1.55 TL);
+  flip(0);
+
+  turn(-65);
+  //flip next cap
+  driveAsync(0.75 TL);
+  while(drivePos() < 0.4) delay(20);
+  setSpeed(60);
+
+  while(isDriving()) delay(20);
+
+  flip(-120);
+  delay(280);
+
+  driveAsync(-0.5 TL);
+
+  intake(120);
+  delay(100);
+  flip(100);
+  while(drivePos() > -0.4) delay(20);
+  delay(100);
+  flip(0);
+
+  //intake(0);
+  intake(0);
+  delay(80);
+  intake(120);
+  delay(1300);
+  driveAsync(1.1 TL);
+  while (drivePos() < 0.77) delay(20);
+  intake(-120);
+  while(isDriving()) delay(20);
+
+  //driveAsync(0.35 TL);
+  //setSpeed(40);
+  //while(isDriving()) delay(20);
+  /*drive(0.2 TL);
+  flipperUpAsync();
+  delay(2000);*/
+
+  //delay(2000);
+  //intake(-30);
+
+
+  while (millis() - startTime < 14750) delay(20);
+  while(!isFired()) {
+    cataThrow();
+  }
+  cataLoadAsync();
+
+  //shoot flags in the center
+  /*intakeStop();
 
   turn(50);
   while(!isFired()) {
@@ -100,7 +200,45 @@ void bigBoi(){
   driveAsync(1.5 TL);
   while(drivePos() < .6 TL) delay(20);
   setSlant(35);
-  delay(450);
+  delay(450);*/
+
+}
+
+void scrapBoi2 () {
+  int startTime = millis();
+  //intake ball under the nearest cap
+  intakeBall();
+  driveAsync(1.92 TL);
+  while(drivePos() < 1.77 TL) delay(20);
+  setSpeed(40);
+  while(isDriving()) delay(20);
+  delay(100);
+  drive(-2 TL);
+  drive(0.5 TL);
+  turn(-50);
+  driveAsync(0.45 TL);
+  while(drivePos() < 0.4) delay(20);
+  setSpeed(40);
+  while(isDriving()) delay(20);
+  while(!isFired()) {
+    cataThrow();
+  }
+  cataLoadAsync();
+  flip(-100);
+
+  delay(250);
+  flip(0);
+  drive(-0.6 TL);
+  intakeBallAsync();
+  intake(120);
+  delay(1000);
+  intake(120);
+  drive(-0.34 TL);
+  intake(120);
+  delay(1000);
+  //intake(0);
+  intake(120);
+  drive(-0.5 TL);
 }
 
 void biggestBoi() {
@@ -324,7 +462,7 @@ void backAuton(){
 
   //align with flags
   drive(-0.18 TL);
-  turn(-51);
+  turn(-54);
   drive(-0.45 TL);
 
   //launch the balls
@@ -376,6 +514,20 @@ void backAuton(){
   while(isDriving()) delay(20);*/
 }
 
+void rightTurn(){
+  turn(-40);
+}
+
+void leftTurn(){
+  turn(-45);
+  delay(1000);
+  turn(45);
+  delay(1000);
+  turn(90);
+  delay(1000);
+  turn(-90);
+  delay(1000);
+}
 
 /*********************************************************/
 void skills(){
@@ -529,6 +681,23 @@ void platformAuton() { // gtg
 
 }
 
+void platAuton()
+ {
+
+     intakeBall();
+     drive(1.92 TL);
+     while(drivePos() < 1.77 TL) delay(20);
+     setSpeed(40);
+     while(isDriving()) delay(20);
+     drive(-0.3 TL);
+     intakeStop();
+     turn(103);
+     setSpeed(40);
+     while(isDriving()) delay(20);
+     drive(1.46 TL);
+ }
+
+
 void test2() {
   //intake ball and flip cap
   intake(-80);
@@ -543,8 +712,10 @@ void test2() {
 void test3() {
 
 
-  flipperDownAsync();
-
+  flip(-50);
+  delay(200);
+  flip(0);
+  delay(3000);
 }
 
 void autonomous() {
@@ -559,19 +730,25 @@ void autonomous() {
 
   switch(auton){
     case 0:
-      bigBoi();
+      bigBoiDelay();
+      //rightTurn();
+      //delay(2000);
+      //leftTurn();
+      //bigScrapBoi();
+
       break;
     case 1:
-      platformAuton();
+      platAuton();
       break;
     case 2:
       flagAndPlat();
       break;
     case 3:
-      getBack();
+      //scrapBoi2();
+      leftTurn();
       break;
     case 4:
-      adi();
+      bigScrapBoi();
       break;
     case 5:
       backAuton();

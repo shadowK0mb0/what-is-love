@@ -2,7 +2,7 @@
 
 
 
-const int setHeights[3] = {0, 128, 350};
+const int setHeights[3] = {3, 128, 340};
 int heightIndex = 0;
 
 
@@ -18,7 +18,7 @@ void lift(int vel){
 }
 
 void setLiftAsync(int sp){
-  sp *= 5; // gear ratio compensation
+  sp *= 3; // gear ratio compensation
   lift1.move_absolute(sp, 100);
 }
 
@@ -62,7 +62,7 @@ void liftOp(){
 
 
   if (heightIndex == 0) {
-    if (lift1.get_raw_position(NULL) > 2)
+    if (lift1.get_raw_position(NULL) > 3)
       lift(-127); // down
     else
       lift(0);
